@@ -1,0 +1,23 @@
+{
+    "name": "rudak/utils-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 UtilsBundle, un petit bundle qui aide bien des fois...",
+    "keywords": ["utilitaires","tools"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kadur Arnaud",
+            "email": "contact@kadur-arnaud.fr",
+            "homepage": "http://kadur-arnaud.fr"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-0": {
+            "Rudak\\UtilsBundle": ""
+        }
+    },
+    "target-dir": "Rudak/UtilsBundle",
+    "minimum-stability": "stable"
+}
