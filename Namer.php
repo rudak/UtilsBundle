@@ -12,16 +12,24 @@ namespace Rudak\UtilsBundle;
 class Namer
 {
 
-    public static function getFirstName()
+    public static function getFirstName($capital = true)
     {
         $firstNames = self::getAvailableFirstNames();
-        return strtolower($firstNames[array_rand($firstNames)]);
+        if (true === $capital) {
+            return ucfirst(strtolower($firstNames[array_rand($firstNames)]));
+        } else {
+            return strtolower($firstNames[array_rand($firstNames)]);
+        }
     }
 
-    public static function getLastName()
+    public static function getLastName($capital = true)
     {
         $lastNames = self::getAvailableLastNames();
-        return strtolower($lastNames[array_rand($lastNames)]);
+        if (true === $capital) {
+            return ucfirst(strtolower($lastNames[array_rand($lastNames)]));
+        } else {
+            return strtolower($lastNames[array_rand($lastNames)]);
+        }
     }
 
     private static function getAvailableFirstNames()
