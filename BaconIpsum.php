@@ -18,7 +18,7 @@ Class BaconIpsum
     private $url = 'http://baconipsum.com/api/?';
     private $params = array(
         'type'             => 'all-meat',
-        'paras'            => 6,
+        'paras'            => 4,
         'start-with-lorem' => true,
         //'sentences' => 2
     );
