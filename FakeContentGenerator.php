@@ -4,125 +4,113 @@ namespace Rudak\UtilsBundle;
 
 class FakeContentGenerator
 {
+    private static $wordlist;
+    private static $previous;
 
-    private $wordsList;
-    private $tags;
-    private $sentence_length;
-    private $sentence_number;
-    private $final_point;
-
-
-    public function __construct($s_length = 25, $s_number = 5, $tags = true)
+    public static function getUltraSmallTitle()
     {
-        $this->wordsList       = array();
-        $this->tags            = $tags;
-        $this->sentence_length = $s_length;
-        $this->sentence_number = $s_number;
-        $this->final_point     = null;
+        return self::doTheJob('twoWords');
     }
 
-    public function setDefaultOptions()
+    public static function getSmallTitle()
     {
-        $this->tags            = true;
-        $this->sentence_length = 25;
-        $this->sentence_number = 5;
-        return $this;
+        return self::doTheJob('smallTitle');
     }
 
-    public function getRandSentence()
+    public static function getTitle()
     {
-        $this->setWordList();
+        return self::doTheJob('title');
+    }
+
+    public static function getSmallSentence()
+    {
+        return self::doTheJob('smallSentence');
+    }
+
+    public static function getSentence()
+    {
+        return self::doTheJob('sentence');
+    }
+
+    public static function getBigSentence()
+    {
+        return self::doTheJob('bigSentence');
+    }
+
+    public static function getParagraph($nb = 1)
+    {
         $out = '';
-        for ($i = 0; $i < $this->sentence_number; $i++) {
-            $out .= $this->makeSentence();
+        for ($i = 0; $i < $nb; $i++) {
+            $out .= sprintf(self::getParagraphPattern(), self::doTheJob('bigSentence'));
         }
         return $out;
     }
 
-    /**
-     * @param boolean $tags
-     */
-    public function setTags($tags)
+    private static function getParagraphPattern()
     {
-        $this->tags = $tags;
-        return $this;
+        return "<p>%s.</p>\n";
     }
 
-    /**
-     * @param int $sentence_length
-     */
-    public function setSentenceLength($sentence_length)
+    private static function doTheJob($type)
     {
-        $this->sentence_length = $sentence_length;
-        return $this;
-    }
+        $out = '';
+        self::getWordlist();
 
-    /**
-     * @param int $sentence_number
-     */
-    public function setSentenceNumber($sentence_number)
-    {
-        $this->sentence_number = $sentence_number;
-        return $this;
-    }
-
-    /**
-     * @param mixed $final_point
-     */
-    public function setFinalPoint($final_point = '.')
-    {
-        $this->final_point = $final_point;
-        return $this;
-
-    }
-
-
-    private function makeSentence()
-    {
-        shuffle($this->wordsList);
-        $sentence = array_slice($this->wordsList, 0, $this->sentence_length);
-        if ($this->tags) {
-            return sprintf($this->getSentencePattern(), ucfirst(implode(' ', $sentence)));
-        } else {
-            return ucfirst(implode(' ', $sentence)) . $this->final_point;
-        }
-    }
-
-    private function getSentencePattern()
-    {
-        return "<p>%s" . $this->final_point . "</p>\n";
-    }
-
-    private function cleanString($string)
-    {
-        return preg_replace('/[^A-Za-z0-9\-]/', ' ', $string);
-    }
-
-    private function setWordList()
-    {
-        if (0 == count($this->wordsList)) {
-            $temp = explode(' ', $this->cleanString($this->getBaseSentence()));
-            foreach ($temp as $word) {
-                $cleanedWord = $this->cleanWord($word);
-                if (!empty($cleanedWord) && strlen($cleanedWord) >= 2) {
-                    $this->wordsList[] = $cleanedWord;
-                }
+        for ($i = 0; $i < self::getLength($type); $i++) {
+            $word = self::$wordlist[$i];
+            while ($word == self::$previous) {
+                shuffle(self::$wordlist);
+                $word = self::$wordlist[$i];
             }
+            self::setPrevious($word);
+            $out .= $word . ' ';
         }
-        shuffle($this->wordsList);
+        return trim($out);
     }
 
-    private function cleanWord($word)
+    private static function getWordlist()
     {
-        $word = strtolower(trim($word));
-        return $word;
+        if (!is_array(self::$wordlist)) {
+            preg_match_all('/[A-Za-z0-9\-]{2,}/', strtolower(self::getBaseSentence()), $match);
+            self::$wordlist = $match[0];
+        }
+        shuffle(self::$wordlist);
     }
 
-    private function getBaseSentence()
+    private static function setPrevious($word)
+    {
+        self::$previous = $word;
+    }
+
+    private static function getLength($type)
+    {
+        switch ($type) {
+            case 'twoWords':
+                return 2;
+                break;
+            case 'smallTitle':
+                return rand(3, 4);
+                break;
+            case 'title':
+                return rand(5, 10);
+                break;
+            case 'smallSentence':
+                return rand(15, 25);
+                break;
+            case 'sentence':
+                return rand(30, 45);
+                break;
+            case 'bigSentence':
+                return rand(55, 100);
+                break;
+        }
+    }
+
+    private static function getBaseSentence()
     {
         return 'At the aquarium hospital veterinarians and volunteers have been working 12
          to 16-hour days since mid-November They test the turtles for dehydration give some
-         of them X-rays to see if they have pneumonia, treat them with medication if necessary
+         of them X-rays to see if they have pneumonia treat them with medication if necessary
          and care for them while they start swimming in baby pools and then graduate to larger
          ones Each day the turtles body temperatures are raised 5 degrees Now when the
          turtles are ready to move to be released in Florida or held in other aquariums
@@ -135,7 +123,7 @@ class FakeContentGenerator
          time, there were about 200 turtles in various stages of recovery at the animal
          hospital the aquarium built and staffed The number of turtles stranded on Cape
          Cod Bay beaches has been increasing for decades, perhaps because conservation
-         efforts have been successful for the Kemp’s ridley perhaps because the ocean
+         efforts have been successful for the Kemp ridley perhaps because the ocean
          has warmed.But nothing suggested that a year like this would happen Previous
          record years were 1989 with about 100 stranded turtles 1999 when 163 were
          found; and 2012 with 413.Over the years, Mr Prescott said, as the number
