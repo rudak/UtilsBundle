@@ -15,6 +15,10 @@ class Uploader
     const RESIZE_NEW_WIDTH = 'new_width';
     const RESIZE_NEW_HEIGHT = 'new_height';
     const RESIZE_QUALITY = 'resize_quality';
+    const RESIZE_THUMB_NEW_WIDTH = 'resize_thumb_width';
+    const RESIZE_THUMB_NEW_HEIGHT = 'resize_thumb_height';
+    const RESIZE_THUMB_QUALITY = 'resize_thumb_quality';
+    const THUMB_PREFIX = 'thumb_prefix';
 
     private $file;
     private $config;
@@ -100,9 +104,9 @@ class Uploader
         return true;
     }
 
+
     public function moveTheFile()
     {
-        $this->setNewName();
         $result = move_uploaded_file($this->file['tmp_name'], $this->getAbsoluteFile());
         if ($result) {
             return true;
@@ -135,20 +139,16 @@ class Uploader
         $this->setFileExtension();
         $alpha         = 'abcdefghijklmnopqrstuvwxyz';
         $newstr        = str_repeat(str_shuffle($alpha . strtoupper($alpha) . '0123456789'), 2);
-        $this->newName = $this->getPrefix() . substr($newstr, rand(0, 26), $length) . '.' . $this->extension;
-    }
-
-    private function getPrefix()
-    {
-        return isset($this->config[self::NEWNAME_PREFIX]) ? $this->config[self::NEWNAME_PREFIX] : null;
+        $this->newName = substr($newstr, rand(0, 26), $length) . '.' . $this->extension;
+        return $this;
     }
 
 
     private function setFileExtension()
     {
-        $finfo    = finfo_open(FILEINFO_MIME_TYPE);
-        $mimetype = finfo_file($finfo, $this->file['tmp_name']);
-        finfo_close($finfo);
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimetype = finfo_file($fileInfo, $this->file['tmp_name']);
+        finfo_close($fileInfo);
 
         switch ($mimetype) {
             case 'image/jpeg':
@@ -178,25 +178,34 @@ class Uploader
         return realpath($path);
     }
 
-    public function getAbsoluteFile()
+    public function getAbsoluteFile($thumb = false)
     {
-        return $this->getAbsoluteDir() . '/' . $this->newName;
+        if (true === $thumb) {
+            return $this->getAbsoluteDir() . '/' . $this->getThumbName();
+        } else {
+            return $this->getAbsoluteDir() . '/' . $this->getName();
+        }
     }
 
-    public function getWebPath()
+
+    public function getWebPath($thumb = false)
     {
-        return $this->config[self::DIR] . '/' . $this->newName;
+        if (true === $thumb) {
+            return $this->config[self::DIR] . '/' . $this->getThumbName();
+        } else {
+            return $this->config[self::DIR] . '/' . $this->getName();
+        }
     }
 
     public function isWidthOk()
     {
-        $iz = getimagesize($this->file['tmp_name']);
-        if ($this->config[self::UPLOAD_MIN_WIDTH] > $iz[0]) {
-            $this->debug = sprintf('Width to small (%spx)', $iz[0]);
+        $imageSizeTab = getimagesize($this->file['tmp_name']);
+        if ($this->config[self::UPLOAD_MIN_WIDTH] > $imageSizeTab[0]) {
+            $this->debug = sprintf('Width to small (%spx)', $imageSizeTab[0]);
             return false;
         }
-        if ($this->config[self::UPLOAD_MIN_HEIGHT] > $iz[1]) {
-            $this->debug = sprintf('Height to small (%spx)', $iz[1]);
+        if ($this->config[self::UPLOAD_MIN_HEIGHT] > $imageSizeTab[1]) {
+            $this->debug = sprintf('Height to small (%spx)', $imageSizeTab[1]);
             return false;
         }
         return true;
@@ -223,12 +232,22 @@ class Uploader
         return (isset($this->config[self::RESIZE_NEW_WIDTH]) && isset($this->config[self::RESIZE_NEW_HEIGHT]) && isset($this->config[self::RESIZE_QUALITY])) ? true : false;
     }
 
-    public function resizeIt()
+    public function resizeIt($thumb = false)
     {
         $Resizer = new Resizer($this->getAbsoluteFile());
-        $Resizer->resizeImage($this->config[self::RESIZE_NEW_WIDTH], $this->config[self::RESIZE_NEW_HEIGHT]);
 
-        return $Resizer->saveImage($this->getAbsoluteFile()) ? true : false;
+        if ($thumb) {
+            $new_width  = $this->config[self::RESIZE_THUMB_NEW_WIDTH];
+            $new_height = $this->config[self::RESIZE_THUMB_NEW_HEIGHT];
+            $quality    = $this->config[self::RESIZE_THUMB_QUALITY];
+        } else {
+            $new_width  = $this->config[self::RESIZE_NEW_WIDTH];
+            $new_height = $this->config[self::RESIZE_NEW_HEIGHT];
+            $quality    = $this->config[self::RESIZE_QUALITY];
+        }
+        $Resizer->resizeImage($new_width, $new_height);
+        $Resizer->saveImage($this->getAbsoluteFile($thumb), $quality) ? true : false;
+
     }
 
     public function getDebugValue()
@@ -250,5 +269,15 @@ class Uploader
             'resize_quality' => 65,
             'prefix'         => 'abcd_'
         );
+    }
+
+    public function getName()
+    {
+        return $this->config[self::NEWNAME_PREFIX] . $this->newName;
+    }
+
+    public function getThumbName()
+    {
+        return $this->config[self::THUMB_PREFIX] . $this->newName;
     }
 }
