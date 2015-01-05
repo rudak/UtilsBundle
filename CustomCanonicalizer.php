@@ -15,7 +15,6 @@ class CustomCanonicalizer implements CanonicalizerInterface
 {
     public function canonicalize($string)
     {
-        $Slug = new Slug($string);
-        return $Slug->getSlug();
+        return Slug::slugit($string);
     }
 }

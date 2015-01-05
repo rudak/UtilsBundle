@@ -35,26 +35,26 @@ class Namer
     private static function getAvailableFirstNames()
     {
         return array(
-            'fréderic', 'cédric', 'paul', 'frank', 'bruno', 'arnaud', 'richard', 'romain', 'samuel',
-            'Marc', 'Cyril', 'Luc', 'Lioris', 'Roman', 'Léandre',
+            'frederic', 'cedric', 'paul', 'frank', 'bruno', 'arnaud', 'richard', 'romain', 'samuel',
+            'Marc', 'Cyril', 'Luc', 'Loris', 'Roman', 'Leandre',
             'Jonas', 'Alan', 'Max', 'Albin', 'Dimitri', 'Ronan', 'Gianni',
-            'Andy', 'Guilhem', 'Sébastien', 'Roméo', 'Fabio', 'Andreas',
+            'Andy', 'Guilhem', 'Sebastien', 'Romeo', 'Fabio', 'Andreas',
             'Luka', 'Bruno', 'Maximilien', 'Jordan', 'Matthias', 'Sofiane',
             'Donovan', 'Ludovic', 'Ange', 'Calvin', 'Nolann', 'Elio', 'Emmanuel',
             'Sam', 'Alex', 'Maxens', 'Noan', 'Ulysse', 'Stanislas', 'Bryan',
             'Emilien', 'Oscar', 'Arsene', 'Matisse', 'Cyprien', 'Elouan', 'Yoann',
-            'Eloi', 'Lorenzo', 'Flavio', 'FranÇois', 'Jonathan', 'Elliot', 'Matthéo',
+            'Eloi', 'Lorenzo', 'Flavio', 'FranÇois', 'Jonathan', 'Elliot', 'Mattheo',
             'Joris', 'Xavier', 'Johan', 'Kyllian', 'Edouard', 'Gauthier', 'Emeric',
             'Pablo', 'Tanguy', 'Ilian', 'Tony', 'Ewan', 'Justin', 'Joan', 'Malo',
             'Jean', 'Melvin', 'Erwann', 'Anatole', 'Augustin', 'Eliot', 'Florent',
-            'Flavien', 'Téo', 'Vincent', 'Gaspard', 'Adam', 'David', 'Alban', 'LoÏs',
+            'Flavien', 'Teo', 'Vincent', 'Gaspard', 'Adam', 'David', 'Alban', 'Lois',
             'Thibaut', 'Olivier', 'Yann', 'Charles', 'Amaury', 'Noam', 'Sasha', 'Jean',
-            'Owen', 'Charly', 'Loan', 'Matéo', 'Léandre', 'Luca', 'Lilian', 'Matthieu',
-            'Julian', 'Nino', 'Mathieu', 'Gaëtan', 'Ewen', 'Mae', 'Loris', 'Alban',
-            'Gaspard', 'Charles', 'Oscar', 'Mahé', 'Louka', 'Antoine', 'Enzo', 'Axel',
+            'Owen', 'Charly', 'Loan', 'Mateo', 'Luca', 'Lilian', 'Matthieu',
+            'Julian', 'Nino', 'Mathieu', 'Gaetan', 'Ewen', 'Mae', 'Alban',
+            'Gaspard', 'Charles', 'Oscar', 'Mahe', 'Louka', 'Antoine', 'Enzo', 'Axel',
             'Thomas', 'Nolan', 'Timeo', 'Sacha', 'Maxime', 'Mathis', 'Baptiste', 'Tom',
-            'Maël', 'Théo', 'Ethan', 'Paul', 'Nathan', 'Léo', 'Raphaël', 'Arthur',
-            'Gabriel', 'Clément', 'Jules', 'Lucas', 'Hugo');
+            'Mael', 'Theo', 'Ethan', 'Paul', 'Nathan', 'Leo', 'Raphael', 'Arthur',
+            'Gabriel', 'Clement', 'Jules', 'Lucas', 'Hugo');
     }
 
     private static function getAvailableLastNames()
