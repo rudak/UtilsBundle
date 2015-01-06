@@ -175,7 +175,7 @@ class Uploader
     private function getAbsoluteDir()
     {
         $path = './' . $this->config[self::DIR];
-        return realpath($path);
+        return $path;
     }
 
     public function getAbsoluteFile($thumb = false)
