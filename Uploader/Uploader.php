@@ -33,11 +33,11 @@ class Uploader
 
     public function is_a_file_uploaded()
     {
-        if (null != $_FILES) {
-            return true;
-        } else {
+        if (null == $_FILES) {
             $this->debug = 'No files uploaded.';
             return false;
+        } else {
+            return true;
         }
 
     }
